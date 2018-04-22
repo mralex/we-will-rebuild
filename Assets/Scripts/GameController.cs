@@ -98,6 +98,10 @@ public class GameController : MonoBehaviour {
             {
                 PlaceBuilding(twoPos);
             }
+            else if (Mode == ConstructionMode.Defense)
+            {
+                PlaceDefense(twoPos);
+            }
             else if (Mode == ConstructionMode.Road)
             {
                 if (city.PlaceRoad(twoPos.x, twoPos.y))
@@ -183,6 +187,26 @@ public class GameController : MonoBehaviour {
             GameObject v = Instantiate(bPrefab, new Vector3(gridPos.x, 0, gridPos.y), Quaternion.identity, transform);
 
             v.transform.rotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0);
+
+            v.GetComponent<CityThingView>().thing = city.map.CellAtPosition(twoPos.x, twoPos.y).thing;
+            city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view = v.GetComponent<CityThingView>();
+        }
+    }
+
+    public void PlaceDefense(Vector2Int twoPos, bool free = false)
+    {
+        float cellSize = MeshSize / MapSize;
+        Vector2 gridPos = Vector2.zero;
+
+        gridPos.x = (((float)twoPos.x / MapSize) * MeshSize) - (MeshSize / 2) + (cellSize / 2);
+        gridPos.y = (((float)twoPos.y / MapSize) * MeshSize) - (MeshSize / 2) + (cellSize / 2);
+
+        if (city.PlaceDefense(twoPos.x, twoPos.y, free))
+        {
+            GameObject bPrefab = Resources.Load<GameObject>("Prefabs/Launcher-1");
+
+            GameObject v = Instantiate(bPrefab, new Vector3(gridPos.x, 0, gridPos.y), Quaternion.identity, transform);
+            v.transform.rotation = Quaternion.Euler(0, rotations[Random.Range(0, 4)], 0);
 
             v.GetComponent<CityThingView>().thing = city.map.CellAtPosition(twoPos.x, twoPos.y).thing;
             city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view = v.GetComponent<CityThingView>();

@@ -65,7 +65,7 @@ public class ToolbarController : MonoBehaviour {
                 break;
             case 5:
                 ButtonDefense.interactable = false;
-                PanelDefense.SetActive(true);
+                //PanelDefense.SetActive(true);
 
                 break;
         }

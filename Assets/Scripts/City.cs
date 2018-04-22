@@ -41,7 +41,7 @@ public class CityThing
 //[Serializable]
 public class City
 {
-    public float Money = 1000000;
+    public float Money = 120000;
     public Map map;
 
     public bool PlaceBuilding(int x, int y, BuildingTypes type, bool free=false)
@@ -62,6 +62,28 @@ public class City
 
         if (!free)
             Money -= 4000;
+
+        return true;
+    }
+
+    public bool PlaceDefense(int x, int y, bool free = false)
+    {
+        if (!map.CellAtPositionIsType(x, y, CellType.Empty) || (!free && Money - 50000 < 0))
+        {
+            return false;
+        }
+
+        CityThing t = new CityThing();
+        t.cell = map.CellAtPosition(x, y);
+        t.type = CellType.Defense;
+        t.Size = 0;
+        t.Name = "A rocket launcher";
+        t.state = ThingState.Normal;
+
+        t.cell.thing = t;
+
+        if (!free)
+            Money -= 50000;
 
         return true;
     }
