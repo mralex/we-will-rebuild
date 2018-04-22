@@ -62,12 +62,14 @@ public class Map {
 
     public MapCell CellAtPosition(int x, int y)
     {
-        if (x < 0 || x > Size || y < 0 || y > Size)
+        int i = y * Size + x;
+
+        if (x < 0 || x > Size || y < 0 || y > Size || i > Size * Size || i < 0)
         {
             return null;
         }
 
-        return Cells[y * Size + x];
+        return Cells[i];
     }
 
     public bool CellAtPositionIsType(int x, int y, CellType type)

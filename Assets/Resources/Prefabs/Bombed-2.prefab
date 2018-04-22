@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4536889201331788}
   - component: {fileID: 33143750918322690}
   - component: {fileID: 23033473602925968}
+  - component: {fileID: 65659232000040164}
   m_Layer: 10
   m_Name: bombed-building-2
   m_TagString: Untagged
@@ -36,6 +37,8 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4113058722719924}
+  - component: {fileID: 114047116932549398}
+  - component: {fileID: 114117627683654300}
   m_Layer: 10
   m_Name: Bombed-2
   m_TagString: Untagged
@@ -53,7 +56,7 @@ GameObject:
   - component: {fileID: 4462959338212632}
   - component: {fileID: 198047230652021704}
   - component: {fileID: 199906539957579012}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Smoke Particles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -67,7 +70,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1605670505226210}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.45810583, y: 0.0025183188, z: -1.1626836}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4536889201331788}
@@ -81,13 +84,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1677759118194698}
-  m_LocalRotation: {x: -0.5617797, y: 0.21061058, z: 0.28084266, w: 0.7491156}
+  m_LocalRotation: {x: -0.66210663, y: 0.24822345, z: 0.24822345, w: 0.66210663}
   m_LocalPosition: {x: 0, y: 0.2, z: 0}
-  m_LocalScale: {x: 0.25, y: 0.25, z: 0.24999988}
+  m_LocalScale: {x: 0.25, y: 0.3, z: 0.25}
   m_Children: []
   m_Father: {fileID: 4113058722719924}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: -73.734, y: 0, z: 41.102}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 41.102}
 --- !u!4 &4536889201331788
 Transform:
   m_ObjectHideFlags: 1
@@ -116,7 +119,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 58bdc081d0ffc48458576f0fee2459d4, type: 3}
+  - {fileID: 2100000, guid: f0deda8a05a9e0a4c8d7003de9dc6ea4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -143,6 +146,40 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1204304917952702}
   m_Mesh: {fileID: 4300000, guid: 58bdc081d0ffc48458576f0fee2459d4, type: 3}
+--- !u!65 &65659232000040164
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1204304917952702}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.02, y: 0.02, z: 0.02}
+  m_Center: {x: 0, y: -2.4460103e-10, z: 0.008207448}
+--- !u!114 &114047116932549398
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1605670505226210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 471251325b683614482ee557b5919051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &114117627683654300
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1605670505226210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6913973e2ab07aa4cbff9786a3c72dd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!198 &198047230652021704
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -150,7 +187,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1677759118194698}
   serializedVersion: 5
-  lengthInSec: 3
+  lengthInSec: 2
   simulationSpeed: 1
   stopAction: 0
   looping: 1
@@ -222,7 +259,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 5
+      scalar: 3.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -329,7 +366,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9433962, g: 0.90334636, b: 0.90334636, a: 1}
+      maxColor: {r: 0.71300006, g: 0.5647525, b: 0.5647525, a: 0.8235294}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -767,7 +804,7 @@ ParticleSystem:
     serializedVersion: 5
     enabled: 1
     type: 4
-    angle: 6.4024773
+    angle: 8
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
@@ -795,7 +832,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.25
+      value: 0.15
       mode: 0
       spread: 0
       speed:
@@ -1352,7 +1389,7 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0.9528302, g: 0.880981, b: 0.63372195, a: 1}
+        key0: {r: 0.559, g: 0.5175926, b: 0.3726667, a: 0.50980395}
         key1: {r: 1, g: 1, b: 1, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}

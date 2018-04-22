@@ -55,12 +55,12 @@ public class ToolbarController : MonoBehaviour {
                 break;
             case 3:
                 ButtonBuilding.interactable = false;
-                PanelBuilding.SetActive(true);
+                //PanelBuilding.SetActive(true);
 
                 break;
             case 4:
                 ButtonNature.interactable = false;
-                PanelNature.SetActive(true);
+                //PanelNature.SetActive(true);
 
                 break;
             case 5:

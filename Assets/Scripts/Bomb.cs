@@ -5,6 +5,8 @@ using UnityEngine;
 public class Bomb : MonoBehaviour {
 
     public ParticleSystem Explosion;
+    public float Damage = 32;
+    public float TTL = 0.5f;
 
 	// Use this for initialization
 	void Start () {
@@ -18,13 +20,17 @@ public class Bomb : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        Explosion.Play();
+        if (Explosion != null)
+            Explosion.Play();
+
         StartCoroutine(Timeout());
+
+        GameController.instance.OnBomb(transform.position, Damage);
     }
 
     IEnumerator Timeout()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(TTL);
 
         Destroy(gameObject);
     }

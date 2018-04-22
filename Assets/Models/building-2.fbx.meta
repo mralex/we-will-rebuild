@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: 58bdc081d0ffc48458576f0fee2459d4
+guid: 1d488e5c54ac3cc4bb17cac26d541867
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Material
+    2100000: No Name
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cube.001
+    4300000: Cube.003
     6400000: //RootNode
   externalObjects: {}
   materials:
