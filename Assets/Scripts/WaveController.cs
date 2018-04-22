@@ -5,13 +5,25 @@ using UnityEngine;
 
 public class WaveController : MonoBehaviour {
 
+    public float InitialWaveTime = 90;
+    public float MinWaveTime = 20;
+
+    public float NextWaveDivisor = 0.8f;
+    public float NextWaveTime;
+
     public static WaveController instance;
 
     public WingSpawner SpawnRed;
     public WingSpawner SpawnBlue;
     public float TimeBetweenWaves = 20;
     public float TimeBetweenWings = 2;
-    public float Wings = 5;
+    public float Wings = 3;
+
+    public int WaveCount = 1;
+
+    public Action<int, float> OnWaveAlert;
+    public Action OnWaveBegin;
+    public Action<int> OnWaveEnded;
 
     public Action<int> OnSpawn;
 
@@ -22,11 +34,11 @@ public class WaveController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-        StartCoroutine(TmpSpawner());
-	}
-	
-	// Update is called once per frame
-	void Update () {
+        NextWaveTime = InitialWaveTime;
+    }
+
+    // Update is called once per frame
+    void Update () {
 		
 	}
 
@@ -36,19 +48,31 @@ public class WaveController : MonoBehaviour {
         OnSpawn(count);
     }
 
-
-
-    IEnumerator TmpSpawner()
+    public void EnqueueWave()
     {
-        while(true)
-        {
-            yield return new WaitForSeconds(TimeBetweenWaves);
+        StartCoroutine(WaveSpawner());
+    }
 
-            for (int i = 0; i < Wings; i++)
-            {
-                SpawnWing();
-                yield return new WaitForSeconds(TimeBetweenWings);
-            }
+    IEnumerator WaveSpawner()
+    {
+        OnWaveAlert(WaveCount, NextWaveTime);
+
+        yield return new WaitForSeconds(NextWaveTime);
+
+        OnWaveBegin();
+
+        for (int i = 0; i < Wings * WaveCount; i++)
+        {
+            SpawnWing();
+            yield return new WaitForSeconds(TimeBetweenWings);
         }
+
+        yield return new WaitForSeconds(10);
+
+        OnWaveEnded(WaveCount);
+
+        WaveCount++;
+        NextWaveTime /= NextWaveDivisor;
+        NextWaveTime = Mathf.Max(NextWaveTime, MinWaveTime);
     }
 }

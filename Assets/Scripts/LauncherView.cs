@@ -8,6 +8,7 @@ public class LauncherView : MonoBehaviour {
     public float MinPodRotation = 0;
     public float MaxPodRotation = 50;
 
+
     public float RotationSpeed = 1.5f;
     public Transform[] RocketSpawns;
 

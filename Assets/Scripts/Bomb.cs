@@ -8,9 +8,11 @@ public class Bomb : MonoBehaviour {
     public float Damage = 32;
     public float TTL = 0.5f;
 
+    AudioSource Audio;
+
 	// Use this for initialization
 	void Start () {
-		
+        Audio = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -21,7 +23,16 @@ public class Bomb : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         if (Explosion != null)
+        {
             Explosion.Play();
+
+            if (Random.Range(0f, 1f) > 0.4f)
+            {
+                Audio.pitch += Random.Range(-0.25f, 0.35f);
+                Audio.Play();
+            }
+        }
+            
 
         StartCoroutine(Timeout());
 

@@ -17,8 +17,19 @@ public enum ConstructionMode
 public class GameController : MonoBehaviour {
     public static GameController instance;
 
-    public Text InfoLabel;
     public Text MoneyLabel;
+
+    public GameObject NextWaveContainer;
+    public Text NextWaveLabel;
+    public Text SmallNextWaveLabel;
+    float nextWaveTime;
+    bool IsWaveCountdown = false;
+
+    public GameObject Scoreboard;
+    public Text DamageReceived;
+    public Text DamageDealt;
+    public Text ThingsOnFire;
+    public Text NewMoney;
 
     public int MapSize = 10;
     public float MeshSize = 10;
@@ -47,88 +58,24 @@ public class GameController : MonoBehaviour {
         PlaceRandomBuildings();
 
         ToolbarController.OnChangeMode += (mode) => Mode = mode;
+
+        WaveController.instance.OnWaveAlert += OnWaveAlert;
+        WaveController.instance.OnWaveBegin += OnWaveBegin;
+        WaveController.instance.OnWaveEnded += OnWaveEnded;
+
+        WaveController.instance.Invoke("EnqueueWave", 4);
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            return;
-        }
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        Vector2 gridPos = Vector2.zero;
-        Vector2Int twoPos = Vector2Int.zero;
-        bool IsOverMap = false;
-        bool IsOverConstruction = false;
-
-        InfoLabel.text = "";
         MoneyLabel.text = "$" + city.Money.ToString("N2");
 
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Constructed")))
+        if (IsWaveCountdown)
         {
-            InfoLabel.text = hit.collider.transform.parent.gameObject.GetComponent<NamedThing>().ThingName();
-            IsOverConstruction = true;
-
-            Vector3 worldPos = (hit.point + (Vector3.one * (MeshSize / 2))) / MeshSize;
-            twoPos = new Vector2Int(Mathf.FloorToInt(worldPos.x * MapSize), Mathf.FloorToInt(worldPos.z * MapSize));
+            nextWaveTime -= Time.deltaTime;
+            SmallNextWaveLabel.text = "Wave: " + WaveController.instance.WaveCount + "\nNext Wave: " + nextWaveTime.ToString("N2");
         }
-        else if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("Ground")))
-        {
-            Vector3 worldPos = (hit.point + (Vector3.one * (MeshSize / 2))) / MeshSize;
-            twoPos = new Vector2Int(Mathf.FloorToInt(worldPos.x * MapSize), Mathf.FloorToInt(worldPos.z * MapSize));
-
-            float cellSize = MeshSize / MapSize;
-
-            gridPos.x = (((float)twoPos.x / MapSize) * MeshSize) - (MeshSize / 2) + (cellSize / 2);
-            gridPos.y = (((float)twoPos.y / MapSize) * MeshSize) - (MeshSize / 2) + (cellSize / 2);
-
-            IsOverMap = true;
-        }
-
-        if (!IsOverMap && !IsOverConstruction)
-        {
-            return;
-        }
-
-        if (Input.GetMouseButton(0) && !IsOverConstruction)
-        {
-            if (Mode == ConstructionMode.Building)
-            {
-                PlaceBuilding(twoPos);
-            }
-            else if (Mode == ConstructionMode.Defense)
-            {
-                PlaceDefense(twoPos);
-            }
-            else if (Mode == ConstructionMode.Road)
-            {
-                if (city.PlaceRoad(twoPos.x, twoPos.y))
-                {
-                    GameObject bPrefab = Resources.Load<GameObject>("Prefabs/RoadGeneric");
-                    GameObject v = Instantiate(bPrefab, new Vector3(gridPos.x, 0, gridPos.y), Quaternion.identity, transform);
-                    v.GetComponent<CityThingView>().thing = city.map.CellAtPosition(twoPos.x, twoPos.y).thing;
-                    city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view = v.GetComponent<CityThingView>();
-                }
-            }
-            else if (Mode == ConstructionMode.Nature)
-            {
-                PlaceTree(twoPos);
-            }
-        }
-        else if (Input.GetMouseButton(0) && IsOverConstruction)
-        {
-            if (Mode == ConstructionMode.Bulldozer)
-            {
-                if (city.Money - 500 >= 0)
-                {
-                    city.Money -= 500;
-                    Destroy(city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view.gameObject);
-                    city.DestroyAt(twoPos.x, twoPos.y);
-                }
-            }
-        }
+        
     }
 
     void PlaceRandomBuildings()
@@ -153,7 +100,7 @@ public class GameController : MonoBehaviour {
         }
     }
 
-    public void PlaceBuilding(Vector2Int twoPos, bool free=false)
+    public bool PlaceBuilding(Vector2Int twoPos, bool free=false)
     {
         float cellSize = MeshSize / MapSize;
         Vector2 gridPos = Vector2.zero;
@@ -170,10 +117,14 @@ public class GameController : MonoBehaviour {
 
             v.GetComponent<CityThingView>().thing = city.map.CellAtPosition(twoPos.x, twoPos.y).thing;
             city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view = v.GetComponent<CityThingView>();
+
+            return true;
         }
+
+        return false;
     }
 
-    public void PlaceTree(Vector2Int twoPos, bool free=false)
+    public bool PlaceTree(Vector2Int twoPos, bool free=false)
     {
         float cellSize = MeshSize / MapSize;
         Vector2 gridPos = Vector2.zero;
@@ -190,10 +141,13 @@ public class GameController : MonoBehaviour {
 
             v.GetComponent<CityThingView>().thing = city.map.CellAtPosition(twoPos.x, twoPos.y).thing;
             city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view = v.GetComponent<CityThingView>();
+            return true;
         }
+
+        return false;
     }
 
-    public void PlaceDefense(Vector2Int twoPos, bool free = false)
+    public bool PlaceDefense(Vector2Int twoPos, bool free = false)
     {
         float cellSize = MeshSize / MapSize;
         Vector2 gridPos = Vector2.zero;
@@ -210,7 +164,10 @@ public class GameController : MonoBehaviour {
 
             v.GetComponent<CityThingView>().thing = city.map.CellAtPosition(twoPos.x, twoPos.y).thing;
             city.map.CellAtPosition(twoPos.x, twoPos.y).thing.view = v.GetComponent<CityThingView>();
+            return true;
         }
+
+        return false;
     }
 
     public void OnBomb(Vector3 pos, float damage)
@@ -255,5 +212,57 @@ public class GameController : MonoBehaviour {
 
             t.state = ThingState.Damaged;
         }
+    }
+
+    void OnWaveAlert(int wave, float time)
+    {
+        nextWaveTime = time;
+        IsWaveCountdown = true;
+
+        StartCoroutine(ShowWaveDetail(wave, time));
+    }
+
+    IEnumerator ShowWaveDetail(int wave, float time)
+    {
+        NextWaveLabel.text = "NEXT WAVE IN\n" + time + " SECONDS";
+        NextWaveContainer.SetActive(true);
+
+        yield return new WaitForSeconds(3);
+
+        NextWaveContainer.SetActive(false);
+    }
+
+    void OnWaveBegin()
+    {
+        IsWaveCountdown = false;
+        SmallNextWaveLabel.text = "Wave: " + WaveController.instance.WaveCount;
+
+        StartCoroutine(ShowWaveIncoming());
+    }
+
+    IEnumerator ShowWaveIncoming()
+    {
+        NextWaveLabel.text = "NEXT WAVE\nINCOMING";
+        NextWaveContainer.SetActive(true);
+
+        yield return new WaitForSeconds(3);
+
+        NextWaveContainer.SetActive(false);
+    }
+
+    void OnWaveEnded(int wave)
+    {
+        Scoreboard.SetActive(true);
+    }
+
+    public void OnQuit()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
+    public void OnContinue()
+    {
+        Scoreboard.SetActive(false);
+        WaveController.instance.Invoke("EnqueueWave", 4);
     }
 }
