@@ -41,12 +41,55 @@ public class CityThing
 //[Serializable]
 public class City
 {
-    public float Money = 120000;
+    public float Money = 200000;
     public Map map;
+
+    public float damageReceived = 0;
+    public float damageDealt = 0;
+
+    public float totalDamageReceived;
+    public float totalDamageDealt;
+    public float totalMoney = 120000;
+    public int totalBuildings;
+
+    public int BuildingCount {
+        get
+        {
+            int count = 0;
+
+            foreach(MapCell c in map.Cells)
+            {
+                if (c.type == CellType.Building || c.type == CellType.Defense)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+    }
+
+    public int DamagedBuildingCount
+    {
+        get
+        {
+            int count = 0;
+
+            foreach (MapCell c in map.Cells)
+            {
+                if ((c.type == CellType.Building || c.type == CellType.Defense) && c.thing.Damage > 0)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+    }
 
     public bool PlaceBuilding(int x, int y, BuildingTypes type, bool free=false)
     {
-        if (!map.CellAtPositionIsType(x, y, CellType.Empty) || (!free && Money - 4000 < 0))
+        if (!map.CellAtPositionIsType(x, y, CellType.Empty) || (!free && Money - 2000 < 0))
         {
             return false;
         }
@@ -60,8 +103,10 @@ public class City
 
         t.cell.thing = t;
 
+        totalBuildings++;
+
         if (!free)
-            Money -= 4000;
+            Money -= 2000;
 
         return true;
     }
@@ -81,6 +126,8 @@ public class City
         t.state = ThingState.Normal;
 
         t.cell.thing = t;
+
+        totalBuildings++;
 
         if (!free)
             Money -= 50000;
@@ -140,5 +187,27 @@ public class City
         }
 
         map.CellAtPosition(x, y).thing = null;
+    }
+
+    public void EngageLaunchers()
+    {
+        foreach (MapCell c in map.Cells)
+        {
+            if (c.type == CellType.Defense)
+            {
+                c.thing.view.gameObject.GetComponentInChildren<LauncherView>().IsLive = true;
+            }
+        }
+    }
+
+    public void DisengageLaunchers()
+    {
+        foreach (MapCell c in map.Cells)
+        {
+            if (c.type == CellType.Defense)
+            {
+                c.thing.view.gameObject.GetComponentInChildren<LauncherView>().IsLive = false;
+            }
+        }
     }
 }

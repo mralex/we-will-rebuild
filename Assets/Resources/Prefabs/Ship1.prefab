@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 114336677897610500}
   - component: {fileID: 65779903061365670}
   - component: {fileID: 54030021850194188}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Ship1
   m_TagString: Ship
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4473301756590986}
   - component: {fileID: 33140010926348526}
   - component: {fileID: 23118544450182142}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: plane-1
   m_TagString: Ship
   m_Icon: {fileID: 0}

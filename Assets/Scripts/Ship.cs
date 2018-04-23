@@ -55,7 +55,7 @@ public class Ship : MonoBehaviour {
             return;
         }
 
-        if (!collision.collider.gameObject.CompareTag("Ship"))
+        if (!collision.collider.gameObject.CompareTag("Ship") || !collision.collider.gameObject.CompareTag("Rocket"))
             return;
 
         GameObject debris = Instantiate(DebrisPrefab, Vector3.zero, Quaternion.identity, transform.parent);

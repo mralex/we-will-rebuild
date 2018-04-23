@@ -31,6 +31,13 @@ public class GameController : MonoBehaviour {
     public Text ThingsOnFire;
     public Text NewMoney;
 
+    public GameObject GameOverBoard;
+    public Text TotalDamageReceived;
+    public Text TotalDamageDealt;
+    public Text TotalWaves;
+    public Text TotalMoney;
+
+
     public int MapSize = 10;
     public float MeshSize = 10;
 
@@ -76,6 +83,10 @@ public class GameController : MonoBehaviour {
             SmallNextWaveLabel.text = "Wave: " + WaveController.instance.WaveCount + "\nNext Wave: " + nextWaveTime.ToString("N2");
         }
         
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+        }
     }
 
     void PlaceRandomBuildings()
@@ -186,6 +197,7 @@ public class GameController : MonoBehaviour {
             return;
 
         t.Damage += damage;
+        city.damageReceived += damage;
 
         Vector2 gridPos = Vector2.zero;
         float cellSize = MeshSize / MapSize;
@@ -214,6 +226,53 @@ public class GameController : MonoBehaviour {
         }
     }
 
+    bool ScoreGame()
+    {
+        int buildingCount = city.BuildingCount;
+        int damagedBuildingCount = city.DamagedBuildingCount;
+
+        if (buildingCount == 0 || damagedBuildingCount == buildingCount || damagedBuildingCount > (buildingCount * 0.75f))
+        {
+            // GAME OVER
+            TotalDamageReceived.text = city.totalDamageReceived.ToString("N2");
+            TotalDamageDealt.text = city.totalDamageDealt.ToString("N2");
+            TotalMoney.text = city.totalMoney.ToString("N2");
+            TotalWaves.text = WaveController.instance.WaveCount.ToString();
+
+            return false;
+        }
+
+        float gross = buildingCount * 100;
+        float money;
+
+        if (damagedBuildingCount < 1)
+        {
+            money = gross * 1.2f;
+        } else
+        {
+            money = ((buildingCount / damagedBuildingCount) * 1.3f) * gross;
+        }
+
+        money += city.damageDealt * 1.6f;
+        money -= city.damageReceived * 0.3f;
+
+        city.Money += money;
+        city.totalMoney += money;
+
+        DamageReceived.text = city.damageReceived.ToString("N2");
+        city.totalDamageReceived += city.damageReceived;
+        city.damageReceived = 0;
+
+        DamageDealt.text = city.damageDealt.ToString("N2");
+        city.totalDamageDealt += city.damageDealt;
+        city.damageDealt = 0;
+
+        ThingsOnFire.text = damagedBuildingCount.ToString() + "/" + buildingCount.ToString();
+        NewMoney.text = "$" + money.ToString("N2");
+
+        return true;
+    }
+
     void OnWaveAlert(int wave, float time)
     {
         nextWaveTime = time;
@@ -227,7 +286,7 @@ public class GameController : MonoBehaviour {
         NextWaveLabel.text = "NEXT WAVE IN\n" + time + " SECONDS";
         NextWaveContainer.SetActive(true);
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1.5f);
 
         NextWaveContainer.SetActive(false);
     }
@@ -236,6 +295,8 @@ public class GameController : MonoBehaviour {
     {
         IsWaveCountdown = false;
         SmallNextWaveLabel.text = "Wave: " + WaveController.instance.WaveCount;
+
+        city.EngageLaunchers();
 
         StartCoroutine(ShowWaveIncoming());
     }
@@ -252,7 +313,16 @@ public class GameController : MonoBehaviour {
 
     void OnWaveEnded(int wave)
     {
-        Scoreboard.SetActive(true);
+        city.DisengageLaunchers();
+
+        if (ScoreGame())
+        {
+            Scoreboard.SetActive(true);
+        } else
+        {
+            GameOverBoard.SetActive(true);
+        }
+        
     }
 
     public void OnQuit()
@@ -264,5 +334,10 @@ public class GameController : MonoBehaviour {
     {
         Scoreboard.SetActive(false);
         WaveController.instance.Invoke("EnqueueWave", 4);
+    }
+
+    public void OnNewGame()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(1);
     }
 }

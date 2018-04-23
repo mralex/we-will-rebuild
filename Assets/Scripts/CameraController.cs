@@ -13,6 +13,9 @@ public class CameraController : MonoBehaviour {
 
     public Action<Vector3> OnCursor;
 
+    float[] rotations = new float[] { 45, 135, 225, 315 };
+    int rotationIndex = 0;
+
     private void Awake()
     {
         instance = this;
@@ -37,5 +40,25 @@ public class CameraController : MonoBehaviour {
         p.z = Mathf.Clamp(p.z, -extents.y, extents.y);
 
         transform.position = p;
-	}
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            rotationIndex++;
+            if (rotationIndex >= rotations.Length)
+            {
+                rotationIndex = 0;
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            rotationIndex--;
+            if (rotationIndex < 0)
+            {
+                rotationIndex = rotations.Length - 1;
+            }
+        }
+
+        transform.rotation = Quaternion.Euler(0, rotations[rotationIndex], 0);
+    }
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class WaveController : MonoBehaviour {
 
     public float InitialWaveTime = 90;
-    public float MinWaveTime = 20;
+    public float MinWaveTime = 10;
 
     public float NextWaveDivisor = 0.8f;
     public float NextWaveTime;
@@ -67,12 +67,12 @@ public class WaveController : MonoBehaviour {
             yield return new WaitForSeconds(TimeBetweenWings);
         }
 
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(6);
 
         OnWaveEnded(WaveCount);
 
         WaveCount++;
-        NextWaveTime /= NextWaveDivisor;
-        NextWaveTime = Mathf.Max(NextWaveTime, MinWaveTime);
+        NextWaveTime *= NextWaveDivisor;
+        NextWaveTime = Mathf.Floor(Mathf.Max(NextWaveTime, MinWaveTime));
     }
 }

@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33667274458212790}
   - component: {fileID: 23595438085860976}
   - component: {fileID: 65952909887378250}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39,7 +39,7 @@ GameObject:
   - component: {fileID: 4194848531213242}
   - component: {fileID: 54125850014221072}
   - component: {fileID: 114024616509798980}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ShipDebris
   m_TagString: Untagged
   m_Icon: {fileID: 0}

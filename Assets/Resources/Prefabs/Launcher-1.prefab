@@ -520,10 +520,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5e43796a9e02e54985eb372b625ed55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsLive: 0
+  FireRate: 2
   Pods: {fileID: 4310280218777354}
   MinPodRotation: 0
   MaxPodRotation: 50
-  RotationSpeed: 30
+  RotationSpeed: 40
   RocketSpawns:
   - {fileID: 4377272936099138}
   - {fileID: 4836556860888966}

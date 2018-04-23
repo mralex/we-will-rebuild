@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 54523113857691410}
   - component: {fileID: 114596486307319742}
   - component: {fileID: 82750115181486450}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 33155668036133348}
   - component: {fileID: 23602957233579076}
   - component: {fileID: 136249644095000944}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 4489367277802978}
   - component: {fileID: 198090541086879800}
   - component: {fileID: 199255170413664180}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: ExplosionParticles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
